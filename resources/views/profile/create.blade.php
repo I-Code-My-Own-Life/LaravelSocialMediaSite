@@ -14,37 +14,25 @@
                         @csrf
 
                         <div class="mb-4">
-                            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                            <input type="text" id="username" name="username" value="{{ old('username') }}"
-                                class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            @error('username')
-                                <p style="color:red;" class="text-red-500 text-xs italic">{{ $message }}</p>
-                            @enderror
+                            <x-label for="username" :value="__('Username')" />
+                            <x-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required />
+                            <x-show-error value="username" />
                         </div>
 
                         <div class="mb-4">
-                            <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">Bio</label>
-                            <textarea id="bio" name="bio" value="{{ old('username') }}"
-                                class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
-                            @error('bio')
-                                <p style="color:red;" class="text-red-500 text-xs italic">{{ $message }}</p>
-                            @enderror
+                            <x-label for="bio" :value="__('Bio')" />
+                            <x-textarea value="bio" :placeholder="null" required />
+                            <x-show-error value="bio" />
                         </div>
 
                         <div class="mb-4">
-                            <label for="avatar" class="block text-gray-700 text-sm font-bold mb-2">Profile
-                                picture</label>
-                            <input type="file" id="avatar" name="avatar" 
-                                class="appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            @error('avatar')
-                                <p style="color:red;" class="text-red-500 text-xs italic">{{ $message }}</p>
-                            @enderror
+                            <x-label for="avatar" :value="__('Profile picture')" />
+                            <x-input id="avatar" class="block mx-1 mt-3 w-full" type="file" name="avatar" :value="old('avatar')" required />
+                            <x-show-error value="avatar" />
                         </div>
 
                         <div class="flex items-center justify-center mt-6">
-                            <button type="submit"
-                                class="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create
-                                Profile</button>
+                            <x-simple-button text="Create Profile " />
                         </div>
                     </form>
                 </div>

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -15,7 +17,14 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        //
+        
+    }
+
+    public function search($name)
+    {
+        $users = User::where('name', 'LIKE', "%$name%")->with('profile')->get();
+        
+        return response()->json($users);
     }
 
     /**
@@ -30,7 +39,7 @@ class ProfileController extends Controller
 
         // Check if a profile already exists for the user
         if ($profile) {
-            return redirect()->route('profile.edit', $profile);
+            // return redirect()->route('profile.edit', $profile);
         }
 
         return view('profile.create');
@@ -48,8 +57,8 @@ class ProfileController extends Controller
         // First, let's validate the data : 
         $request->validate([
             'username' => ['required', 'string', 'max:255', 'unique:profiles'],
-            'bio' => ['nullable', 'string'],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'] // Assuming you want to validate that the uploaded file is an image and has a maximum size of 2MB (2048 KB).
+            'bio' => ['required', 'string'],
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'] // Assuming you want to validate that the uploaded file is an image and has a maximum size of 2MB (2048 KB).
         ]);
 
         // Handle avatar file upload
@@ -75,9 +84,14 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Profile $profile)
     {
-        //
+        $posts = Post::latest()->get();
+
+        return view('profile.show', [
+            "profile" => $profile,
+            "posts" => $posts
+        ]);
     }
 
     /**
@@ -88,6 +102,8 @@ class ProfileController extends Controller
      */
     public function edit(Profile $profile)
     {
+        $this->authorize('edit-profile', $profile);
+
         return view('profile.edit', compact('profile'));
     }
 
